@@ -11,7 +11,8 @@ class Terminal {
   autorun: Array<string> = [
     'whoami',
     'cat contacts.txt',
-    'help'
+    'nginx -t',
+    'help',
   ];
 
   constructor(container: HTMLElement, textarea: HTMLTextAreaElement) {
