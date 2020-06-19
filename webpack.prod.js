@@ -15,8 +15,10 @@ module.exports = merge(common, {
   },
   plugins: [
     new CleanWebpackPlugin(),
-    new CopyPlugin([
-      { from: 'CNAME', to: '.' }
-    ]),
+    new CopyPlugin({
+      patterns: [
+        { from: 'CNAME', to: '.' }
+      ]
+    }),
   ]
 });
