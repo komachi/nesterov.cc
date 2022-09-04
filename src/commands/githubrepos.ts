@@ -1,25 +1,34 @@
-import { uriInDoubleQuotedAttr, inHTMLData } from 'xss-filters';
+
 
 const username = 'komachi';
 interface GithubRepo {
   fork: boolean;
+  archived: boolean;
+  disabled: boolean;
   html_url: string;
   name: string;
   stargazers_count: number;
-  description: string;
+  description?: string;
+  topics: Array<string>
 }
 
-export function githubrepos():Promise<string> {
+export function githubrepos(): Promise<string> {
   return fetch(
-    `https://api.github.com/users/${username}/repos?sort=created&direction=desc`
+    `https://api.github.com/users/${username}/repos?sort=pushed&direction=desc&type=owner&per_page=50`,
+    {
+      headers: {
+        Accept: 'application/vnd.github+json'
+      }
+    }
   )
     .then(res => res.json())
-    .then(repos => repos.filter((repo: GithubRepo) => repo.fork === false)
-      .sort((repo1: GithubRepo, repo2: GithubRepo) =>
-        repo1.stargazers_count < repo2.stargazers_count
-      )
+    .then(repos => repos.filter((repo: GithubRepo) => {
+      return repo.fork === false &&
+        repo.archived === false &&
+        repo.stargazers_count > 2
+    })
       .map((repo: GithubRepo) => {
-        return `<a href="${uriInDoubleQuotedAttr(repo.html_url)}">${inHTMLData(repo.name)}<a>\n${inHTMLData(repo.description)}\n`
+        return `<a href="${repo.html_url}">${repo.name}<a>${repo.description ? `\n${repo.description}` : ''}${repo.topics.length !== 0 ? `\nTags: ${repo.topics.join(', ')}` : ''}\n`;
       }).join('\n')
     ).catch(() => 'Error: can\'t get GitHub repos')
 }

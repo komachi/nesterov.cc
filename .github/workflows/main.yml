@@ -8,19 +8,21 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout 🛎️
-        uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Node.js
+        uses: actions/setup-node@v3
         with:
-          persist-credentials: false
-
-      - name: Install and Build 🔧
+          node-version: '16'
+          cache: 'npm'
+      - name: Build
         run: |
           npm ci
           npm run build
-
-      - name: Deploy 🚀
-        uses: JamesIves/github-pages-deploy-action@releases/v3
+          touch dist/.nojekyll
+          echo "nesterov.cc" > dist/CNAME
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH: gh-pages
-          FOLDER: dist
+          branch: gh-pages
+          folder: dist

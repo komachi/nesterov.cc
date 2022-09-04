@@ -6,7 +6,6 @@ export const files: {
     + 'Twitter: <a href="https://twitter.com/AntNesterov">@AntNesterov</a>'
 };
 
-export function ls() {
-  const separator = ' ';
-  return Object.keys(files).join(separator);
+export function ls(): string {
+  return Object.keys(files).join(' ');
 }

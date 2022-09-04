@@ -1,13 +1,18 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 const path = require('path');
 
 module.exports = {
   entry: path.resolve(__dirname, 'src', 'terminal.ts'),
+  mode: process.env.NODE_ENV || 'development',
   output: {
     filename: '[name].[hash].js',
-    chunkFilename: '[id].[hash].chunk.js'
+    chunkFilename: '[id].[hash].chunk.js',
+    path: path.resolve(__dirname, 'dist')
   },
   resolve: {
     extensions: ['.ts', '.js'],
@@ -35,11 +40,15 @@ module.exports = {
     ]
   },
   optimization: {
-    minimize: true,
     splitChunks: {
       chunks: 'all'
-    }
+    },
+    minimizer: [
+      new CssMinimizerPlugin(),
+      new TerserPlugin()
+    ]
   },
+  devtool: false,
   plugins: [
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, 'src', 'index.html')
@@ -52,9 +61,12 @@ module.exports = {
         developerName: 'Anton Nesterov',
         developerURL: 'https://nesterov.cc',
         background: '#fff',
-        pixel_art: true
+        pixel_art: true,
+        theme_color: '#000'
+
       }
     }),
-    new MiniCssExtractPlugin()
+    new MiniCssExtractPlugin(),
+    new CleanWebpackPlugin()
   ]
 };

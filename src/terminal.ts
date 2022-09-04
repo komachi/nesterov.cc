@@ -1,6 +1,12 @@
-import { inHTMLData } from 'xss-filters';
+import { sanitize } from 'dompurify';
 import commands from './commands';
 import './styles.css';
+
+const domPurifyPolicy = {
+  ALLOWED_TAGS: ['a'],
+  ALLOWED_ATTR: ['href'],
+  RETURN_TRUSTED_TYPE: true
+};
 
 class Terminal {
   container: HTMLElement;
@@ -11,7 +17,6 @@ class Terminal {
   autorun: Array<string> = [
     'whoami',
     'cat contacts.txt',
-    'nginx -t',
     'help',
   ];
 
@@ -21,9 +26,11 @@ class Terminal {
 
     this.textarea.addEventListener('keydown', e => this.handleKeydown(e));
     this.textarea.addEventListener('blur', () => this.handleBlur());
-
+    this.container.addEventListener('click', (event) => {
+      event.preventDefault();
+      this.textarea.focus();
+    });
     this.autorun.forEach(command => this.handleCommand(command));
-
   }
 
   handleKeydown(e: KeyboardEvent):void {
@@ -63,9 +70,9 @@ class Terminal {
     });
   }
 
-  handleCommand(value: string):void {
+  handleCommand(value: string): void {
     this.textarea.value = '';
-    const trimmedValue = this.trim(value);
+    const trimmedValue = value.trim();
 
     if (trimmedValue === '') {
       this.addLine('');
@@ -94,7 +101,7 @@ class Terminal {
 
   addLine(text: string):void {
     const newLine = document.createElement('div');
-    newLine.innerHTML = `${this.terminalPromt}${text}`;
+    newLine.innerHTML = sanitize(`${this.terminalPromt}${text}`, domPurifyPolicy);
     this.container.insertBefore(newLine, this.textarea.parentNode);
     this.scrollToBottom();
   }
@@ -102,16 +109,23 @@ class Terminal {
   scrollToBottom():void {
     this.container.scrollTop = this.container.scrollHeight;
   }
-
-  trim(value: string): string {
-    return inHTMLData(value.trim());
-  }
 }
 
-window.addEventListener('load', () => {
-  const container = document.getElementById('terminal-container');
-  const textarea = <HTMLTextAreaElement>document.getElementById('terminal-textarea');
-  if (container && textarea) {
-    new Terminal(container, textarea);
+if (typeof window !== 'undefined') {
+  if (window.trustedTypes?.createPolicy) {
+    window.trustedTypes.createPolicy('default', {
+      createHTML(string) {
+        return sanitize(string, domPurifyPolicy);
+      } 
+    });
   }
-});
+
+  window.addEventListener('load', () => {
+    const container = document.getElementById('terminal-container');
+    const textarea = <HTMLTextAreaElement>document.getElementById('terminal-textarea');
+    if (container && textarea) {
+      new Terminal(container, textarea);
+    }
+  });
+}
+

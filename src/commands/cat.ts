@@ -1,6 +1,6 @@
 import { files } from './ls';
 
-export function cat(file: string):Promise<string> | string {
+export function cat(file: string): Promise<string> | string {
   if (!files[file]) {
     return `cat: ${file}: No such file or directory`;
   }

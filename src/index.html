@@ -10,11 +10,19 @@
     <meta property="og:image" content="https://nesterov.cc/assets/apple-touch-icon-1024x1024.png" />
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:site" content="@AntNesterov" />
+    <meta name="referrer" content="no-referrer">
+    <meta http-equiv="Content-Security-Policy"
+      content="default-src 'self'; trusted-types default; connect-src 'self' https://api.github.com/;">
     <title>anton@nesterov.cc:~$</title>
   </head>
   <body>
     <div id="terminal-container">
-      <noscript>Well, with JS enabled this should be an interactive shell, but you choose not to.</noscript>
+      <noscript>
+        <div>anton@nesterov.cc:~$&nbsp;Well, with JS enabled this should be an interactive shell, but you choose not to.</div>
+        <div>Email: <a href="mailto:anton@nesterov.cc">anton@nesterov.cc</a></div>
+        <div>Github: <a href="https://github.com/komachi">@komachi</a></div>
+        <div>Twitter: <a href="https://twitter.com/AntNesterov">@AntNesterov</a></div>
+      </noscript>
       <div>anton@nesterov.cc:~$&nbsp;<textarea
         id="terminal-textarea"
         class="terminal-textarea"
