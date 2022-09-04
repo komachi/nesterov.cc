@@ -28,7 +28,7 @@ export function githubrepos(): Promise<string> {
         repo.stargazers_count > 2
     })
       .map((repo: GithubRepo) => {
-        return `<a href="${repo.html_url}">${repo.name}<a>${repo.description ? `\n${repo.description}` : ''}${repo.topics.length !== 0 ? `\nTags: ${repo.topics.join(', ')}` : ''}\n`;
+        return `<a href="${repo.html_url}" target="_blank">${repo.name}<a>${repo.description ? `\n${repo.description}` : ''}${repo.topics.length !== 0 ? `\nTags: ${repo.topics.join(', ')}` : ''}\n`;
       }).join('\n')
     ).catch(() => 'Error: can\'t get GitHub repos')
 }

@@ -4,7 +4,7 @@ import './styles.css';
 
 const domPurifyPolicy = {
   ALLOWED_TAGS: ['a'],
-  ALLOWED_ATTR: ['href'],
+  ALLOWED_ATTR: ['href', 'target'],
   RETURN_TRUSTED_TYPE: true
 };
 
@@ -26,8 +26,7 @@ class Terminal {
 
     this.textarea.addEventListener('keydown', e => this.handleKeydown(e));
     this.textarea.addEventListener('blur', () => this.handleBlur());
-    this.container.addEventListener('click', (event) => {
-      event.preventDefault();
+    this.container.addEventListener('click', () => {
       this.textarea.focus();
     });
     this.autorun.forEach(command => this.handleCommand(command));
