@@ -1,11 +1,11 @@
 {
-  "version": "0.0.1",
+  "version": "0.0.2",
   "name": "Anton Nesterov",
   "description": "Anton Nesterov's personal page",
   "icons": {
-    "60": "/assets/firefox_app_60x60.png",
-    "128": "/assets/firefox_app_128x128.png",
-    "512": "/assets/firefox_app_512x512.png"
+    "60": "firefox_app_60x60.png",
+    "128": "firefox_app_128x128.png",
+    "512": "firefox_app_512x512.png"
   },
   "developer": {
     "name": "Anton Nesterov",
